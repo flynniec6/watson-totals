@@ -3,9 +3,6 @@ from dateutil import parser
 import json
 import sys
 
-entries = []
-
-
 def parse_entry(entry):
 	start = parser.parse(entry['start'])
 	stop = parser.parse(entry['stop'])
@@ -23,6 +20,7 @@ def sum_by_day(parsed_entries):
 
 def main():
 	# json.loads takes second parameter so it should be possible to convert the JSON on the fly to tuples
+	entries = []
 	raw = json.loads(sys.stdin.read())
 	for entry in raw:
 		entries.append(parse_entry(entry))
