@@ -1,3 +1,4 @@
+#!/usr/local/opt/python/bin/python3.7
 import datetime
 from dateutil import parser
 import json
