@@ -12,7 +12,7 @@ def parse_entry(entry):
     start = parser.parse(entry['start'])
     stop = parser.parse(entry['stop'])
     delta = stop - start
-    return (start.year, start.month, start.day), delta.total_seconds()
+    return start.date(), delta.total_seconds()
 
 
 def total_seconds_per_day(parsed_entries):
@@ -23,20 +23,18 @@ def total_seconds_per_day(parsed_entries):
 
 
 def hours_minutes(day_totals):
-    return {key: time.strftime("%Hh %Mm", time.gmtime(day_totals.get(key))) for key in day_totals.keys()}
+    return {day: time.strftime("%Hh %Mm", time.gmtime(total)) for day, total in day_totals.items()}
 
 
 def output_console(formatted_daily_totals):
     for day, total in sorted(formatted_daily_totals.items()):
-        day_as_date = datetime.date(*day)
-        print(day_as_date.isoformat(), total)
+        print(day.isoformat(), total)
 
 
 def output_json(formatted_daily_totals):
     output_object = {}
     for day, total in sorted(formatted_daily_totals.items()):
-        day_as_date = datetime.date(*day)
-        output_object[day_as_date.isoformat()] = total
+        output_object[day.isoformat()] = total
     print(json.dumps(output_object))
 
 
@@ -49,8 +47,7 @@ def output_calendar(formatted_daily_totals):
 
     dt_stamp = time.strftime("%Y%m%dT%H%m%SZ", time.gmtime())
     for day, total in sorted(formatted_daily_totals.items()):
-        day_as_date = datetime.date(*day)
-        calendar.extend(daily_total_to_calendar_event(dt_stamp, day_as_date, total))
+        calendar.extend(daily_total_to_calendar_event(dt_stamp, day, total))
 
     calendar.append('END:VCALENDAR')
     print("\n".join(calendar))
